@@ -2,6 +2,8 @@ mod utils;
 
 use wasm_bindgen::prelude::*;
 
+extern crate js_sys;
+
 #[wasm_bindgen]
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -68,37 +70,17 @@ impl Universe {
     pub fn new() -> Universe {
         let width = 64;
         let height = 64;
-
-
-        let mut cells = vec![Cell::Dead; (width * height) as usize];
-
-        // Lightweight Spaceship (LWSS) pattern
-        // Positioned starting at row 1, column 1
-        let start_row = 10;
-        let start_col = 10;
         
-        // let lwss = [
-        //     (0, 1), (0, 4),
-        //     (1, 0),
-        //     (2, 0),
-        //     (3, 0), (3, 4),
-        //     (4, 1), (4, 2), (4, 3),
-        // ];
-
-        let lwss = [
-            (0, 1), (0, 4),
-            (1, 0),
-            (2, 0),
-            (3, 0), (3, 1), (3, 2), (3, 3),
-            (2, 4)
-        ];
-        
-        for (r, c) in lwss.iter().cloned() {
-            let row = start_row + r;
-            let col = start_col + c;
-            let idx = (row * width + col) as usize;
-            cells[idx] = Cell::Alive;
-        }
+        // rand crate probably doesn't work on WASM so let's use js random
+        let cells = (0..width * height)
+            .map(|_| {
+                if js_sys::Math::random() < 0.5 {
+                    Cell::Alive
+                } else {
+                    Cell::Dead
+                }
+            })
+            .collect();
 
         Universe {
             width,
@@ -119,7 +101,7 @@ impl Universe {
         self.height
     }
 
-    pub fn cells(&self) -> *const Cell{
+    pub fn cells(&self) -> *const Cell {
         self.cells.as_ptr()
     }
 }
