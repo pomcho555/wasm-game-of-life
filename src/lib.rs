@@ -69,15 +69,36 @@ impl Universe {
         let width = 64;
         let height = 64;
 
-        let cells = (0..width * height)
-            .map(|i| {
-                if i % 2 == 0 || i % 7 == 0 {
-                    Cell::Alive
-                } else {
-                    Cell::Dead
-                }
-            })
-            .collect();
+
+        let mut cells = vec![Cell::Dead; (width * height) as usize];
+
+        // Lightweight Spaceship (LWSS) pattern
+        // Positioned starting at row 1, column 1
+        let start_row = 10;
+        let start_col = 10;
+        
+        // let lwss = [
+        //     (0, 1), (0, 4),
+        //     (1, 0),
+        //     (2, 0),
+        //     (3, 0), (3, 4),
+        //     (4, 1), (4, 2), (4, 3),
+        // ];
+
+        let lwss = [
+            (0, 1), (0, 4),
+            (1, 0),
+            (2, 0),
+            (3, 0), (3, 1), (3, 2), (3, 3),
+            (2, 4)
+        ];
+        
+        for (r, c) in lwss.iter().cloned() {
+            let row = start_row + r;
+            let col = start_col + c;
+            let idx = (row * width + col) as usize;
+            cells[idx] = Cell::Alive;
+        }
 
         Universe {
             width,
