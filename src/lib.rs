@@ -70,7 +70,7 @@ impl Universe {
     pub fn new() -> Universe {
         let width = 64;
         let height = 64;
-        
+
         // rand crate probably doesn't work on WASM so let's use js random
         let cells = (0..width * height)
             .map(|_| {
