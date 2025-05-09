@@ -2,6 +2,11 @@ mod utils;
 
 use wasm_bindgen::prelude::*;
 
+// For wasm size optimization
+#[cfg(feature = "wee_alloc")]
+#[global_allocator]
+static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+
 extern crate js_sys;
 
 extern crate web_sys;
